@@ -14,11 +14,9 @@ class WizardCancelFees(models.TransientModel):
     meter_id = fields.Many2one('power.meter')
 
     def action_recharge_meter(self):
-        amount = self.amount * 10.0
-
         payload = {
             "address": self.meter_id.get_formatted_address(),
             "imei": self.meter_id.imei,
-            "amount": amount
+            "amount": self.amount
         }
         Meter.call_endpoint(RECHARGE_API, payload)
