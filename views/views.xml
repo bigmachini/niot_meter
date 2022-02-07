@@ -1,0 +1,159 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="niot_meter_list">
+            <field name="name">Power Meter List</field>
+            <field name="model">power.meter</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="imei"/>
+                    <field name="serial_no"/>
+                    <field name="address"/>
+                    <field name="mode"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="meter_tarrif_list">
+            <field name="name">Meter Tariff List</field>
+            <field name="model">meter.tariff</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="amount"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="meter_assignment_list">
+            <field name="name">Meter Assignment List</field>
+            <field name="model">meter.assignment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="meter_id"/>
+                    <field name="user_id"/>
+                    <field name="data_assigned"/>
+                    <field name="date_unassigned"/>
+                    <field name="assigned_by"/>
+                    <field name="unassigned_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- explicit Form View definition -->
+
+        <record id="view_power_meter_form" model="ir.ui.view">
+            <field name="name">Power Meter</field>
+            <field name="model">power.meter</field>
+            <field name="arch" type="xml">
+                <form string="Power Meter">
+                    <header>
+                        <button name="action_power_on" string="TURN ON" type="object"
+                                class="btn-primary"
+                                attrs="{'invisible':[('power_status','=',True)]}"
+                                confirm="Are you sure you want to TURN ON the meter?"
+                                help="Turn on the meter"/>
+                        <button name="action_power_off" string="TURN OFF" type="object"
+                                class="btn-primary"
+                                attrs="{'invisible':[('power_status','=',False)]}"
+                                confirm="Are you sure you want to TURN OFF the meter?"
+                                help="Turn Off the meter"/>
+                        <button name="action_prepaid" string="PREPAID MODE" type="object"
+                                class="btn-primary"
+                                attrs="{'invisible':[('mode','=','prepaid')]}"
+                                confirm="Are you sure you want to change this meter to PREPAID MODE?"
+                                help="Switch to Prepaid Mode"/>
+                        <button name="action_post_paid" string="POSTPAID MODE" type="object"
+                                class="btn-primary"
+                                attrs="{'invisible':[('mode','=','postpaid')]}"
+                                confirm="Are you sure you want to change this meter to POSTPAID MODE?"
+                                help="Switch to postpaid mode"/>
+                        <button name="action_clear_balance" string="CLEAR BALANCE" type="object"
+                                class="btn-primary"
+                                attrs="{'invisible':[('mode','=','postpaid')]}"
+                                confirm="Are you sure you want to change CLEAR BALANCE on this meter?"
+                                help="Clear Meter Balance"/>
+                        <button name="action_get_balance" string="GET BALANCE" type="object"
+                                class="btn-primary"
+                                confirm="Are you sure you want to get METER BALANCE?"
+                                help="Clear Meter Balance"/>
+                        <button name="action_recharge_meter" string="RECHARGE METER" type="object"
+                                class="btn-primary"
+                                attrs="{'invisible':[('mode','=','postpaid')]}"
+                                help="Recharge Postpaid Meters"/>
+                    </header>
+                    <sheet>
+                        <group name="action_wrapper">
+                            <field name="imei"/>
+                            <field name="serial_no"/>
+                            <field name="address"/>
+                            <field name="power_status"/>
+                            <field name="mode"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="units" readonly="1"/>
+
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- actions opening views on models -->
+        <record model="ir.actions.act_window" id="niot_meter.action_meter_tariff">
+            <field name="name">Meter Tariff</field>
+            <field name="res_model">meter.tariff</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window" id="niot_meter.action_meter">
+            <field name="name">Power Meter</field>
+            <field name="res_model">power.meter</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window" id="niot_meter.action_meter_assignment">
+            <field name="name">Meter Assignment window</field>
+            <field name="res_model">meter.assignment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- server action to the one above -->
+        <!--
+            <record model="ir.actions.server" id="niot_meter.action_server">
+              <field name="name">niot_meter server</field>
+              <field name="model_id" ref="model_niot_meter_niot_meter"/>
+              <field name="state">code</field>
+              <field name="code">
+                action = {
+                  "type": "ir.actions.act_window",
+                  "view_mode": "tree,form",
+                  "res_model": model._name,
+                }
+              </field>
+            </record>
+        -->
+
+        <!-- Top menu item -->
+        <menuitem name="Power Meter" id="niot_meter.menu_root"/>
+        <!-- menu categories -->
+        <menuitem name="Power Meter" id="main_menu" parent="niot_meter.menu_root"/>
+        <menuitem name="Tariff" id="menu_tariff" parent="niot_meter.main_menu"
+                  action="niot_meter.action_meter_tariff"/>
+        <menuitem name="Meter" id="menu_meter" parent="niot_meter.main_menu"
+                  action="niot_meter.action_meter"/>
+        <menuitem name="Meter Assignment" id="menu_meter_assignment" parent="niot_meter.main_menu"
+                  action="niot_meter.action_meter_assignment"/>
+
+        <!-- actions -->
+        <!--   <menuitem name="List" id="niot_meter.menu_1_list" parent="niot_meter.menu_1"
+                     action="niot_meter.action_window"/>
+           <menuitem name="Server to list" id="niot_meter" parent="niot_meter.menu_2"
+                     action="niot_meter.action_server"/>-->
+    </data>
+</odoo>

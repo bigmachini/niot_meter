@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_meter_tariff,niot_meter.meter_tariff,model_meter_tariff,base.group_user,1,1,1,0
+access_meter,niot_meter.power_meter,model_power_meter,base.group_user,1,1,1,0
+access_meter_assignment,niot_meter.meter_assignment,model_meter_assignment,base.group_user,1,1,1,0
+niot_meter.access_wizard_recharge_meter,access_wizard_recharge_meter,niot_meter.model_wizard_recharge_meter,base.group_user,1,1,1,0
