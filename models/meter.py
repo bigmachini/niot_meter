@@ -1,6 +1,6 @@
 import json
 
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 
 BASE_URL = "http://pl.numeraliot.com:8010/meter"
 POWER_API = "/power"
@@ -118,7 +118,19 @@ class Meter(models.Model):
             self.units = 0.0
 
     def action_recharge_meter(self):
-        pass
+        view = self.env.ref('niot_meter.wizard_recharge_meter_form')
+        # TDE FIXME: a return in a loop, what a good idea. Really.
+        return {
+            'name': _('Recharge Power Meter'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'wizard.recharge.meter',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'context': {'default_imei': self.imei, 'default_address': self.address}
+        }
 
 
 class MeterAssignment(models.Model):

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record model="ir.ui.view" id="wizard_wizard_recharge_meter_form">
+        <record model="ir.ui.view" id="wizard_recharge_meter_form">
             <field name="name">wizard.recharge.meter.form</field>
             <field name="model">wizard.recharge.meter</field>
             <field name="arch" type="xml">
                 <form string="Recharge">
                     <group>
+                        <field name="address" readonly="1"/>
+                        <field name="imei" readonly="1"/>
                         <field name="amount"/>
                     </group>
 
