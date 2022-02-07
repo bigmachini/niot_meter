@@ -121,7 +121,7 @@ class Meter(models.Model):
         view = self.env.ref('niot_meter.wizard_recharge_meter_form')
         # TDE FIXME: a return in a loop, what a good idea. Really.
         return {
-            'name': _('Recharge Power Meter'),
+            'name': _(f'Recharge Power Meter: {self.imei}'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -129,7 +129,7 @@ class Meter(models.Model):
             'views': [(view.id, 'form')],
             'view_id': view.id,
             'target': 'new',
-            'context': {'default_imei': self.imei, 'default_address': self.address}
+            'context': {'default_meter_id': self.id}
         }
 
 

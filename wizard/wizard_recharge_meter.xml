@@ -7,8 +7,6 @@
             <field name="arch" type="xml">
                 <form string="Recharge">
                     <group>
-                        <field name="address" readonly="1"/>
-                        <field name="imei" readonly="1"/>
                         <field name="amount"/>
                     </group>
 
