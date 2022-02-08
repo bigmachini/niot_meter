@@ -1,4 +1,6 @@
+import datetime
 import json
+import logging
 
 from odoo import api, models, fields, _
 
@@ -31,6 +33,7 @@ class Meter(models.Model):
         ('address_unique', 'unique (address)', "Address already exists!"),
         ('meter_unique', 'unique (imei,address)', "Meter already exists!"),
     ]
+    last_update = fields.Datetime()
 
     def get_formatted_address(self):
         address_list = []
@@ -134,11 +137,19 @@ class Meter(models.Model):
 
     @api.model
     def set_units(self, vals):
+        logging.info(f"PowerMeter::set_units::  vals --> {vals}")
         address = vals['address']
         units = vals['balance']
         meter = self.search([('address', '=', address)])
         if meter:
             meter.units = units
+
+    @api.model
+    def set_last_update(self, vals):
+        address = vals['address']
+        meter = self.search([('address', '=', address)])
+        if meter:
+            meter.last_update = datetime.datetime.now()
 
 
 class MeterAssignment(models.Model):
