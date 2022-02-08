@@ -45,16 +45,20 @@ class Meter(models.Model):
 
     @staticmethod
     def call_endpoint(_api, payload):
-        import requests
-        url = BASE_URL + _api
-        headers = {
-            'Content-Type': 'application/json'
-        }
+        try:
+            import requests
+            url = BASE_URL + _api
+            headers = {
+                'Content-Type': 'application/json'
+            }
 
-        response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-        if response.status_code == 200 and response.json()['result']:
-            return True
-        return False
+            response = requests.request("POST", url, headers=headers, data=json.dumps(payload), timeout=5)
+            if response.status_code == 200 and response.json()['result']:
+                return True
+            return False
+        except Exception as ex:
+            logging.error(ex)
+            return False
 
     def set_power_status(self, status):
         return {
