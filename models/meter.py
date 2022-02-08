@@ -115,7 +115,7 @@ class Meter(models.Model):
     def action_get_balance(self):
         payload = self.get_balance()
         if self.call_endpoint(BALANCE_API, payload):
-            self.units = 0.0
+            pass
 
     def action_recharge_meter(self):
         view = self.env.ref('niot_meter.wizard_recharge_meter_form')
