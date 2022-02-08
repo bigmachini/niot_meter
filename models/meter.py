@@ -132,6 +132,14 @@ class Meter(models.Model):
             'context': {'default_meter_id': self.id}
         }
 
+    @api.model
+    def set_units(self, vals):
+        address = vals['address']
+        units = vals['units']
+        meter = self.search([('address', '=', address)])
+        if meter:
+            meter.units = units
+
 
 class MeterAssignment(models.Model):
     _name = 'meter.assignment'
