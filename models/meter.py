@@ -135,7 +135,7 @@ class Meter(models.Model):
     @api.model
     def set_units(self, vals):
         address = vals['address']
-        units = vals['units']
+        units = vals['balance']
         meter = self.search([('address', '=', address)])
         if meter:
             meter.units = units
