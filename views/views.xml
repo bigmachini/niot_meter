@@ -87,16 +87,32 @@
                                 help="Recharge Postpaid Meters"/>
                     </header>
                     <sheet>
-                        <group name="action_wrapper">
-                            <field name="imei"/>
-                            <field name="serial_no"/>
-                            <field name="address"/>
-                            <field name="power_status"/>
-                            <field name="mode"/>
-                            <field name="user_id" readonly="1"/>
-                            <field name="units" readonly="1"/>
-                            <field name="last_update" readonly="1"/>
+                        <group>
+                            <group name="action_wrapper" string="Meter Details">
+                                <fields name="model"/>
+                                <field name="imei"/>
+                                <field name="serial_no"/>
+                                <field name="address"/>
+                                <field name="power_status"/>
+                                <field name="mode"/>
+                                <field name="user_id" readonly="1"/>
+                                <field name="units" readonly="1"/>
+                                <field name="last_update" readonly="1"/>
+                                <field name="balance" readonly="1"/>
+                                <field name="signal" readonly="1"/>
+                            </group>
+                            <group name="meter_stats" string="Meter Stats">
+                                <field name="current_a" readonly="1"/>
+                                <field name="current_b" readonly="1"/>
+                                <field name="current_c" readonly="1"/>
+                                <field name="voltage_a" readonly="1"/>
+                                <field name="voltage_b" readonly="1"/>
+                                <field name="voltage_c" readonly="1"/>
+                                <field name="power" readonly="1"/>
+                                <field name="frequency" readonly="1"/>
+                            </group>
                         </group>
+
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

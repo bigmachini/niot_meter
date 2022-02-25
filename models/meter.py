@@ -35,6 +35,22 @@ class Meter(models.Model):
     ]
     last_update = fields.Datetime()
 
+    model = fields.Char(tracking=True, default='', required=True)
+    current_a = fields.Float('Current (A) Amps')
+    current_b = fields.Float('Current (B) Amps')
+    current_c = fields.Float('Current (C) Amps')
+    current_n = fields.Float('Current (N) Amps')
+
+    voltage_a = fields.Float('Voltage (A) Volts')
+    voltage_b = fields.Float('Voltage (B) Volts')
+    voltage_c = fields.Float('Voltage (C) Volts')
+
+    power = fields.Float('Power (KW)')
+    frequency = fields.Float('Frequency (Hz)')
+    balance = fields.Float('Balance (KWH)')
+    signal = fields.Integer()
+
+
     def get_formatted_address(self):
         address_list = []
         len_address = x = len(self.address)
@@ -42,6 +58,7 @@ class Meter(models.Model):
             address_list.append(self.address[x - 2: x])
             x -= 2
         return ''.join(address_list)
+
 
     @staticmethod
     def call_endpoint(_api, payload):
@@ -60,6 +77,7 @@ class Meter(models.Model):
             logging.error(ex)
             return False
 
+
     def set_power_status(self, status):
         return {
             "address": self.get_formatted_address(),
@@ -67,12 +85,14 @@ class Meter(models.Model):
             "status": status
         }
 
+
     def set_mode(self, mode):
         return {
             "address": self.get_formatted_address(),
             "imei": self.imei,
             "mode": mode
         }
+
 
     def set_balance(self, units=0.00, clear_balance=False):
         if clear_balance:
@@ -87,6 +107,7 @@ class Meter(models.Model):
                 "amount": units
             }
 
+
     def get_balance(self):
         return {
             "address": self.get_formatted_address(),
@@ -94,35 +115,42 @@ class Meter(models.Model):
             "mode": self.mode
         }
 
+
     def action_power_on(self):
         payload = self.set_power_status('on')
         if self.call_endpoint(POWER_API, payload):
             self.power_status = True
+
 
     def action_power_off(self):
         payload = self.set_power_status('off')
         if self.call_endpoint(POWER_API, payload):
             self.power_status = False
 
+
     def action_prepaid(self):
         payload = self.set_mode('prepaid')
         if self.call_endpoint(MODE_API, payload):
             self.mode = 'prepaid'
+
 
     def action_post_paid(self):
         payload = self.set_mode('postpaid')
         if self.call_endpoint(MODE_API, payload):
             self.mode = 'postpaid'
 
+
     def action_clear_balance(self):
         payload = self.set_balance(clear_balance=True)
         if self.call_endpoint(CLEAR_BALANCE_API, payload):
             self.units = 0.0
 
+
     def action_get_balance(self):
         payload = self.get_balance()
         if self.call_endpoint(BALANCE_API, payload):
             pass
+
 
     def action_recharge_meter(self):
         view = self.env.ref('niot_meter.wizard_recharge_meter_form')
@@ -139,6 +167,7 @@ class Meter(models.Model):
             'context': {'default_meter_id': self.id}
         }
 
+
     @api.model
     def set_units(self, vals):
         logging.info(f"PowerMeter::set_units::  vals --> {vals}")
@@ -147,6 +176,7 @@ class Meter(models.Model):
         meter = self.search([('address', '=', address)])
         if meter:
             meter.units = units
+
 
     @api.model
     def set_last_update(self, vals):
